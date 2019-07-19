@@ -62,6 +62,7 @@ public class FachadaEscalonadorRoundRobinTest {
 		checaStatusRodandoFila(fachada, TipoEscalonador.RoundRobin, 3, 3, "P1", "P2");
 
 		fachada.tick();
+
 		checaStatusRodandoFila(fachada, TipoEscalonador.RoundRobin, 3, 4, "P2", "P1");
 		
 		ticks(fachada, 2);
