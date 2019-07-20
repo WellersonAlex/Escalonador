@@ -23,4 +23,8 @@ public class StatusEscalonador {
 	public String statusProcessoRodandoFila(TipoEscalonador tipo, String rodando, List<String> processos, int quantum, int tick) {		
 		return "Escalonador " + tipo + ";Processos: {Rodando: " + rodando + ", Fila: " + processos + "};Quantum: "+ quantum + ";Tick: " + tick;
 	}
+	
+	public String statusRodandoFilaBloqueados(TipoEscalonador tipo, String rodando, List<String> processos, List<String> bloqueados, int quantum, int tick) {		
+		return "Escalonador " + tipo + ";Processos: {Rodando: " + rodando + ", Fila: " + processos + ", Bloqueados: "+bloqueados+"};Quantum: "+ quantum + ";Tick: " + tick;
+	}
 }

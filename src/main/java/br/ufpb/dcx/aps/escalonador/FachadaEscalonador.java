@@ -9,10 +9,11 @@ public class FachadaEscalonador extends StatusEscalonador {
 	private int tick = 0;
 	private int valorAternar = 1;
 	private String rodando, finalizado;
-	private boolean alternar, ocupandoCPU = false;
+	private boolean alternar, ocupandoCPU, acaoBloqueio, processoBloqueado = false;
 	private TipoEscalonador tipo;
 	private List<String> processosAlternando = new ArrayList<String>();
 	private List<String> fila = new ArrayList<String>();
+	private List<String> bloqueados = new ArrayList<String>();
 
 	public FachadaEscalonador(TipoEscalonador tipoEscalonador) {
 		this.tipo = tipoEscalonador;
@@ -55,6 +56,18 @@ public class FachadaEscalonador extends StatusEscalonador {
 		}
 		rodarProcessoFila();
 		realizarTrocaProcessos();
+		
+		if(processosAlternando.size() == 0 && fila.size() == 1 && rodando != null) {
+			return statusFila(tipo, fila, quantum, tick);
+		}
+		if(bloqueados.size() > 0 && rodando != bloqueados.get(0)) {
+			for (int i = 0; i < processosAlternando.size(); i++) {
+				if(processosAlternando.get(i).equals(rodando)) {
+					processosAlternando.remove(i);
+				}
+			}
+			return statusRodandoFilaBloqueados(tipo, rodando, processosAlternando, bloqueados, quantum, tick);
+		}
 
 		return statusProcessoRodandoFila(tipo, rodando, processosAlternando, quantum, tick);
 	}
@@ -88,6 +101,9 @@ public class FachadaEscalonador extends StatusEscalonador {
 	}
 
 	protected void realizarTrocaProcessos() {
+		if(acaoBloqueio) {
+			return;
+		}
 		for (int i = 1; i < fila.size(); i++) {
 			if (processosAlternando.contains(fila.get(i))) {
 
@@ -102,6 +118,10 @@ public class FachadaEscalonador extends StatusEscalonador {
 
 	public void tick() {
 		tick++;
+		if(acaoBloqueio) {
+			valorAternar = tick;
+			acaoBloqueio = false;
+		}
 		if (processosAlternando.size() == fila.size()) {
 			valorAternar = tick;
 		}
@@ -111,10 +131,21 @@ public class FachadaEscalonador extends StatusEscalonador {
 		if (fila.size() > 1) {
 			verificarAlternancia();
 		}
+		if(bloqueados.size() > 0) {
+			verificarAlternancia();
+			if (processosAlternando.size() > 0 && processoBloqueado) {
+				if(!ocupandoCPU) {
+					rodando = processosAlternando.get(0);
+				}
+				
+			}
+		}
 	}
 
 	protected void rodarProcessoFila() {
-		rodando = fila.get(0);
+		if(rodando == null) {
+			rodando = fila.get(0);	
+		}
 		if (processosAlternando.size() > 0 && ocupandoCPU) {
 			processosAlternando.remove(0);
 		}
@@ -124,6 +155,7 @@ public class FachadaEscalonador extends StatusEscalonador {
 		if ((valorAternar + quantum) == tick) {
 			valorAternar = tick;
 			alternar = true;
+			acaoBloqueio = false;
 		} else {
 			alternar = false;
 		}
@@ -150,10 +182,18 @@ public class FachadaEscalonador extends StatusEscalonador {
 	}
 
 	public void bloquearProcesso(String nomeProcesso) {
-
+		bloqueados.add(nomeProcesso);
+		acaoBloqueio = true;
+		processoBloqueado = true;
 	}
 
 	public void retomarProcesso(String nomeProcesso) {
-
+		if (bloqueados.size() > 0) {
+			for (int i = 0; i < bloqueados.size(); i++) {
+				if (bloqueados.get(i).equals(nomeProcesso)) {
+					processosAlternando.add(bloqueados.remove(i));
+				}
+			}
+		}
 	}
 }
