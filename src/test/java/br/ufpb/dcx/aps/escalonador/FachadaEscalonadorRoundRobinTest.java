@@ -382,6 +382,10 @@ public class FachadaEscalonadorRoundRobinTest {
 
 		assertThrows(EscalonadorException.class, () -> fachada.retomarProcesso("R"), 
 				"O processo R não pode ser retomado pois não está bloqueado" );
+
+		assertThrows(EscalonadorException.class, () -> fachada.adicionarProcesso("P", 1), 
+				"O Escalonador RoundRobin não permite que os processos tenham uma prioridade definida na adição" );
+
 	}
 
 }

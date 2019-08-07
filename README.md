@@ -89,3 +89,17 @@ Serão precisos mais ticks para alternar os processos.
  Não pode bloquear processo que não esteja rodando.
  
  Não permite retomar processo não bloqueado.
+
+Esses 15 testes iniciais são repetidos no Escalonador com Prioridades, no cenário onde todos os processos têm a mesma prioridade. A partir dos testes a seguir, existem processos com prioridades diferentes, o que mudar o comportamento do escalonador.
+
+- 16: Dois processos concorreriam pela CPU, mas tem prioridades diferentes, por isso, mesmo quando estourar o quantum, não há troca de processos
+
+Os processos não se alternam na CPU no estouro do quantum.
+
+- 17: Dois processos concorreriam pela CPU, mas tem prioridades diferentes, quando o processo de maior prioridade é adicionado, há troca de processos
+
+Depois disso, os processos não se alternam na CPU no estouro do quantum.
+
+- 18: Três processos concorreriam pela CPU, mas tem prioridades diferentes, quando o processo de maior prioridade é adicionado, há troca de processos
+
+Depois disso, os processos não se alternam na CPU no estouro do quantum.

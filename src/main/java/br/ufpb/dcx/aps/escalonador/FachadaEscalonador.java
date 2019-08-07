@@ -24,7 +24,7 @@ public class FachadaEscalonador {
 
 	}
 
-	public FachadaEscalonador(TipoEscalonador roundrobin, int quantum) {
+	public FachadaEscalonador(TipoEscalonador roundrobin, int quantusm) {
 		this.tipo = roundrobin;
 		this.quantum = quantum;
 		if (quantum <= 0) {
@@ -178,6 +178,9 @@ public class FachadaEscalonador {
 		if (tick > 0) {
 			valorAternar = tick + 1;
 		}
+	}
+
+	public void adicionarProcesso(String nomeProcesso, int prioridade) {
 	}
 
 	public void finalizarProcesso(String nomeProcesso) {
