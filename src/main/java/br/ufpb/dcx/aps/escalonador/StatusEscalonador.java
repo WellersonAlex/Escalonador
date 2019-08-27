@@ -1,6 +1,7 @@
 package br.ufpb.dcx.aps.escalonador;
 
 import java.util.List;
+import java.util.Queue;
 
 public class StatusEscalonador {
 	
@@ -8,7 +9,7 @@ public class StatusEscalonador {
 		return "Escalonador " + tipo + ";Processos: {};Quantum: " + quantum + ";Tick: " + tick;
 	}
 	
-	public String statusFila(TipoEscalonador tipo, List<String> fila, int quantum, int tick) {		
+	public String statusFila(TipoEscalonador tipo, Queue<String> fila, int quantum, int tick) {		
 		return "Escalonador " + tipo + ";Processos: {Fila: " + fila + "};Quantum: " + quantum + ";Tick: " + tick;
 	}
 	
@@ -20,7 +21,7 @@ public class StatusEscalonador {
 		return "Escalonador " + tipo + ";Processos: {Rodando: " + finalizado + "};Quantum: " + quantum + ";Tick: "+ tick;
 	}
 	
-	public String statusProcessoRodandoFila(TipoEscalonador tipo, String rodando, List<String> processos, int quantum, int tick) {		
+	public String statusProcessoRodandoFila(TipoEscalonador tipo, String rodando, Queue<String> processos, int quantum, int tick) {		
 		return "Escalonador " + tipo + ";Processos: {Rodando: " + rodando + ", Fila: " + processos + "};Quantum: "+ quantum + ";Tick: " + tick;
 	}
 	
