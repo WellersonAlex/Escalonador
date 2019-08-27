@@ -17,15 +17,18 @@ public class StatusEscalonador {
 		return "Escalonador " + tipo + ";Processos: {Rodando: " + rodando + "};Quantum: " + quantum + ";Tick: "+ tick;
 	}
 	
-	public String statusProcessoFinalizado(TipoEscalonador tipo, String finalizado, int quantum, int tick) {		
-		return "Escalonador " + tipo + ";Processos: {Rodando: " + finalizado + "};Quantum: " + quantum + ";Tick: "+ tick;
-	}
-	
 	public String statusProcessoRodandoFila(TipoEscalonador tipo, String rodando, Queue<String> processos, int quantum, int tick) {		
 		return "Escalonador " + tipo + ";Processos: {Rodando: " + rodando + ", Fila: " + processos + "};Quantum: "+ quantum + ";Tick: " + tick;
 	}
 	
-	public String statusRodandoFilaBloqueados(TipoEscalonador tipo, String rodando, List<String> processos, List<String> bloqueados, int quantum, int tick) {		
+	public String statusRodandoFilaBloqueados(TipoEscalonador tipo, String rodando, Queue<String> processos, List<String> bloqueados, int quantum, int tick) {		
 		return "Escalonador " + tipo + ";Processos: {Rodando: " + rodando + ", Fila: " + processos + ", Bloqueados: "+bloqueados+"};Quantum: "+ quantum + ";Tick: " + tick;
+	}
+	
+	public String statusRodandoBloqueados(TipoEscalonador tipo, String rodando, List<String> bloqueados, int quantum, int tick) {		
+		return "Escalonador " + tipo + ";Processos: {Rodando: " + rodando + ", Bloqueados: "+bloqueados+"};Quantum: "+ quantum + ";Tick: " + tick;
+	}
+	public String statusBloqueados(TipoEscalonador tipo, List<String> bloqueados, int quantum, int tick) {		
+		return "Escalonador " + tipo + ";Processos: {Bloqueados: "+bloqueados+"};Quantum: "+ quantum + ";Tick: " + tick;
 	}
 }
