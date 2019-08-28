@@ -71,16 +71,16 @@ public class Escalonador {
 			rodando = filaAternado.poll();
 		}
 
-		finalizarProcesso();
+		finalizandoProcesso();
 
 		verificarAlternancia();
 
-		bloquerarProcesso();
+		bloqueandoProcesso();
 
-		retomarProcesso();
+		retomandoProcesso();
 	}
 
-	protected void retomarProcesso() {
+	protected void retomandoProcesso() {
 		if (processosRetornar.size() > 0) {
 			if (bloqueados.size() <= 1) {
 				for (int i = 0; i < bloqueados.size(); i++) {
@@ -104,7 +104,7 @@ public class Escalonador {
 		}
 	}
 
-	protected void bloquerarProcesso() {
+	protected void bloqueandoProcesso() {
 		if (processosBloquear.size() > 0) {
 			for (int i = 0; i < processosBloquear.size(); i++) {
 				bloqueados.add(processosBloquear.get(i));
@@ -124,7 +124,7 @@ public class Escalonador {
 		}
 	}
 
-	protected void finalizarProcesso() {
+	protected void finalizandoProcesso() {
 		if (processosFinalizar.size() > 0) {
 
 			if (filaAternado.size() == 0) {
