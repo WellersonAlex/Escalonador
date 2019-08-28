@@ -156,7 +156,7 @@ public class Escalonador {
 		if (filaAternado.contains(nomeProcesso) || nomeProcesso == null) {
 			throw new EscalonadorException();
 		}
-		if (tipoEscalonador.equals(getEscalonador())) {
+		if (tipoEscalonador.equals(escalonadorRoundRobin())) {
 			filaAternado.add(nomeProcesso);
 			if (tick > 0) {
 				valorAternar = tick + 1;
@@ -170,7 +170,7 @@ public class Escalonador {
 		if (filaAternado.contains(nomeProcesso) || nomeProcesso == null || prioridade > 4) {
 			throw new EscalonadorException();
 		}
-		if (tipoEscalonador.equals(getEscalonador())) {
+		if (tipoEscalonador.equals(escalonadorRoundRobin())) {
 			throw new EscalonadorException();
 		} else {
 			filaAternado.add(nomeProcesso);
@@ -227,7 +227,7 @@ public class Escalonador {
 		}
 	}
 
-	public TipoEscalonador getEscalonador() {
+	public TipoEscalonador escalonadorRoundRobin() {
 		return TipoEscalonador.RoundRobin;
 	}
 
