@@ -15,13 +15,14 @@ public class Escalonador {
 	private String rodando;
 
 	private Queue<String> filaAternado = new LinkedList<>();
+	private List<String> filaAternadoP = new ArrayList<>();
 	private List<String> bloqueados = new ArrayList<String>();
 
 	private List<String> processosFinalizar = new ArrayList<String>();
 	private List<String> processosBloquear = new ArrayList<String>();
 	private List<String> processosRetornar = new ArrayList<String>();
 
-	private List<Integer> prioridades = new ArrayList<>();
+	private Queue<Integer> prioridades = new LinkedList<>();
 
 	public Escalonador() {
 	}
@@ -39,8 +40,14 @@ public class Escalonador {
 	}
 
 	public String getStatus() {
+//		String Res = "Escalonador"+ tipoEscalonador + ";Processos: {";
+//		if (rodando == null) {
+//			Res += "";
+//		}
+//		return Res;
+//	}
 
-		if (rodando == null && filaAternado.size() == 0) {
+if (rodando == null && filaAternado.size() == 0) {
 			if (bloqueados.size() == 0) {
 				return st.statusInicial(tipoEscalonador, quantum, tick);
 			} else {
@@ -63,12 +70,34 @@ public class Escalonador {
 		return st.statusProcessoRodandoFila(tipoEscalonador, rodando, filaAternado, quantum, tick);
 	}
 
+
 	public void tick() {
 
 		tick++;
 
 		if (rodando == null) {
-			rodando = filaAternado.poll();
+			int Comparar1;
+			int Comparar2;
+			if (prioridades.size() > 1){
+				for(int i = 0; i < prioridades.size(); i++) {
+					Comparar1 = prioridades.poll();
+					Comparar2 = prioridades.poll();
+					if(Comparar1 > Comparar2){
+						filaAternado.add(filaAternadoP.get(0));
+						filaAternado.add(filaAternadoP.get(1));
+					}else if (Comparar2>Comparar1) {
+						filaAternado.add(filaAternadoP.get(1));
+						filaAternado.add(filaAternadoP.get(2));
+						}
+						}
+							
+						
+					}else {
+						for(int x = 0;x<prioridades.size();x++) {
+							filaAternado.add(filaAternadoP.get(x));
+				}
+			}
+				rodando = filaAternado.poll();
 		}
 
 		finalizarProcesso();
@@ -79,7 +108,9 @@ public class Escalonador {
 
 		retomarProcesso();
 	}
+	protected void testePrioridade() {
 
+	}
 	protected void retomarProcesso() {
 		if (processosRetornar.size() > 0) {
 			if (bloqueados.size() <= 1) {
@@ -173,13 +204,14 @@ public class Escalonador {
 		if (tipoEscalonador.equals(getEscalonador())) {
 			throw new EscalonadorException();
 		} else {
-			filaAternado.add(nomeProcesso);
+		
+			filaAternadoP.add(nomeProcesso);
 			prioridades.add(prioridade);
 			if (tick > 0) {
 				valorAternar = tick + 1;
 			}
-		}
-	}
+			}
+			}
 
 	public void finalizarProcesso(String nomeProcesso) {
 		if (filaAternado.contains(nomeProcesso) || nomeProcesso.equals(rodando)) {
