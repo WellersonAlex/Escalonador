@@ -12,4 +12,6 @@ public class EscalonadorRoundRobin extends Escalonador{
 	public EscalonadorRoundRobin(int quantum) {
 		super(TipoEscalonador.RoundRobin, quantum);
 	}
+	
+	
 }
