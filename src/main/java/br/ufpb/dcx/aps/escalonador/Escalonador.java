@@ -187,11 +187,11 @@ public class Escalonador {
 			}
 		}
 
-		retomMenorPrioridade();
+		retomarMenorPrioridade();
 
 	}
 
-	protected void retomMenorPrioridade() {
+	protected void retomarMenorPrioridade() {
 		if ( prioridades.size() == 3 && filaAternado.size() == 2 
 			&& valorAternar+tick == 10 && prioridades.get(1) == 2) {
 			
