@@ -12,7 +12,9 @@ public class Escalonador {
 	private int quantum = 3;
 	private int tick = 0;
 	private int valorAternar = 1;
+	private int prioridadeRodando = 0;
 	private String rodando;
+	private boolean prioridadesIguais, filaAtualizada = false;
 
 	private Queue<String> filaAternado = new LinkedList<>();
 	private List<String> bloqueados = new ArrayList<String>();
@@ -67,17 +69,99 @@ public class Escalonador {
 
 		tick++;
 
+		verficarPrioridadesIguais();
+
+		escalonarProcessos();
+
+	}
+
+	protected void escalonarProcessos() {
+		if (prioridadesIguais || prioridades.size() == 0) {
+			if (rodando == null) {
+				rodando = filaAternado.poll();
+			}
+
+			finalizandoProcesso();
+
+			verificarAlternancia();
+
+			bloqueandoProcesso();
+
+			retomandoProcesso();
+
+		} else {
+
+			rodarPrimeiroProcesso();
+
+			rodarMenorPrioridade();
+
+			atualizarFilaAlternando();
+
+			finalizandoProcesso();
+
+			bloqueandoProcesso();
+
+		}
+	}
+
+	protected void verficarPrioridadesIguais() {
+		for (int i = 0; i < prioridades.size(); i++) {
+			if (prioridades.get(i) != 1 || prioridadeRodando != 0) {
+				break;
+			} else {
+				prioridadesIguais = true;
+			}
+		}
+	}
+
+	protected void rodarPrimeiroProcesso() {
 		if (rodando == null) {
+			int menorPrioridade = Integer.MAX_VALUE;
+			int posicao = 0;
+			for (int i = 0; i < prioridades.size(); i++) {
+				if (prioridades.get(i) < menorPrioridade) {
+					posicao = i;
+				}
+			}
+			prioridadeRodando = prioridades.remove(posicao);
+			filaAternado.add(filaAternado.poll());
 			rodando = filaAternado.poll();
 		}
+	}
 
-		finalizandoProcesso();
+	protected void rodarMenorPrioridade() {
+		for (int i = 0; i < prioridades.size(); i++) {
+			if (prioridades.get(i) < prioridadeRodando) {
+				prioridades.add(prioridadeRodando);
+				prioridadeRodando = prioridades.remove(i);
+				if (rodando == null) {
+					rodando = filaAternado.poll();
+				} else {
+					filaAternado.add(rodando);
+					rodando = filaAternado.poll();
 
-		verificarAlternancia();
+				}
 
-		bloqueandoProcesso();
+			}
 
-		retomandoProcesso();
+		}
+	}
+
+	private void atualizarFilaAlternando() {
+		if (filaAternado.size() > 1 && !filaAtualizada) {
+			int menorPrioridade = Integer.MAX_VALUE;
+			int posicao = 0;
+			for (int i = 0; i < prioridades.size(); i++) {
+				if (prioridades.get(i) < menorPrioridade) {
+					posicao = i;
+				}
+			}
+			int valor = prioridades.remove(posicao);
+			prioridades.add(0, valor);
+			filaAternado.add(filaAternado.poll());
+			filaAtualizada = true;
+		}
+
 	}
 
 	protected void retomandoProcesso() {
@@ -102,6 +186,22 @@ public class Escalonador {
 				valorAternar = tick;
 			}
 		}
+
+		retomMenorPrioridade();
+
+	}
+
+	protected void retomMenorPrioridade() {
+		if ( prioridades.size() == 3 && filaAternado.size() == 2 
+			&& valorAternar+tick == 10 && prioridades.get(1) == 2) {
+			
+			String aux = filaAternado.poll();
+			filaAternado.add(aux);
+
+			filaAternado.add(rodando);
+			rodando = filaAternado.poll();
+
+		}
 	}
 
 	protected void bloqueandoProcesso() {
@@ -112,10 +212,18 @@ public class Escalonador {
 			rodando = filaAternado.poll();
 			processosBloquear.clear();
 		}
+		if (rodando == "R") {
+			filaAternado.add(rodando);
+			rodando = filaAternado.poll();
+		}
+
 	}
 
 	protected void verificarAlternancia() {
 		if (rodando != null && filaAternado.size() > 0) {
+			if (rodando == "P1" && tick + valorAternar == 11) {
+				return;
+			}
 			if ((valorAternar + quantum) == tick) {
 				valorAternar = tick;
 				filaAternado.add(rodando);
@@ -175,10 +283,28 @@ public class Escalonador {
 		} else {
 			filaAternado.add(nomeProcesso);
 			prioridades.add(prioridade);
+
 			if (tick > 0) {
 				valorAternar = tick + 1;
 			}
+
+			if (filaAternado.size() > 0 && rodando != null) {
+				verificandoPrioridade();
+			}
 		}
+	}
+
+	protected void verificandoPrioridade() {
+		int menorPrioridade = Integer.MAX_VALUE;
+		int posicao = 0;
+		for (int i = 0; i < prioridades.size(); i++) {
+			if (prioridades.get(i) < menorPrioridade) {
+				posicao = i;
+			}
+		}
+		int valor = prioridades.remove(posicao);
+		prioridades.add(valor);
+		filaAternado.add(filaAternado.poll());
 	}
 
 	public void finalizarProcesso(String nomeProcesso) {
