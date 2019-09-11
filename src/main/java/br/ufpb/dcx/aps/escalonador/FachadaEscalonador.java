@@ -51,4 +51,8 @@ public class FachadaEscalonador {
 	public void retomarProcesso(String nomeProcesso) {
 		escalonador.retomarProcesso(nomeProcesso);
 	}
+
+	public void adicionarProcessoTempoFixo(String string, int duracao) {
+		
+	}
 }
