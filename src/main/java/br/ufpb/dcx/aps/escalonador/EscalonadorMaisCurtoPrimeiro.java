@@ -42,7 +42,14 @@ public class EscalonadorMaisCurtoPrimeiro extends Escalonador {
 	public void tick() {
 
 		tick++;
+		
+		rodarPrimeiroProcessoMCP();
+		
+		rodarNovoProcesso();
 
+	}
+
+	private void rodarPrimeiroProcessoMCP() {
 		if (fila.size() > 0) {
 			if (processoRodando == null) {
 
@@ -51,7 +58,9 @@ public class EscalonadorMaisCurtoPrimeiro extends Escalonador {
 				duracaoFixa = tick + duracaoRodando;
 			}
 		}
+	}
 
+	private void rodarNovoProcesso() {
 		if (duracaoFixa == tick && processoRodando != null) {
 			if (fila.size() > 0) {
 				processoRodando = fila.remove(0);
@@ -64,7 +73,6 @@ public class EscalonadorMaisCurtoPrimeiro extends Escalonador {
 				duracaoFixa = tick + duracaoRodando;
 			}
 		}
-
 	}
 
 	public void adicionarProcessoTempoFixo(String nomeProcesso, int duracao) {
@@ -74,30 +82,43 @@ public class EscalonadorMaisCurtoPrimeiro extends Escalonador {
 		if (duracao < 1) {
 			throw new EscalonadorException();
 		}
+		adicionarProcessoMCP(nomeProcesso, duracao);
+
+	}
+
+	private void adicionarProcessoMCP(String nomeProcesso, int duracao) {
 		int maisCurto = Integer.MAX_VALUE;
 		if (fila.size() == 0) {
 			fila.add(nomeProcesso);
 			duracoes.add(duracao);
 		} else {
-			fila.add(nomeProcesso);
-			duracoes.add(duracao);
-			int menorPosicao = 0;
-			for (int i = 0; i < duracoes.size(); i++) {
-				if (duracoes.get(i) < maisCurto) {
-					maisCurto = duracoes.get(i);
-					menorPosicao = i;
-				}
-			}
+			int menorPosicao = guardarPosicaoMenor(nomeProcesso, duracao, maisCurto);
 
-			if (menorPosicao > 0) {
-				String filaTemp = fila.remove(menorPosicao);
-				Integer duracaoTemp = duracoes.remove(menorPosicao);
+			ordenarFilaProcessos(menorPosicao);
+		}
+	}
 
-				fila.add(0, filaTemp);
-				duracoes.add(0, duracaoTemp);
+	private void ordenarFilaProcessos(int menorPosicao) {
+		if (menorPosicao > 0) {
+			String filaTemp = fila.remove(menorPosicao);
+			Integer duracaoTemp = duracoes.remove(menorPosicao);
+
+			fila.add(0, filaTemp);
+			duracoes.add(0, duracaoTemp);
+		}
+	}
+
+	private int guardarPosicaoMenor(String nomeProcesso, int duracao, int maisCurto) {
+		fila.add(nomeProcesso);
+		duracoes.add(duracao);
+		int menorPosicao = 0;
+		for (int i = 0; i < duracoes.size(); i++) {
+			if (duracoes.get(i) < maisCurto) {
+				maisCurto = duracoes.get(i);
+				menorPosicao = i;
 			}
 		}
-
+		return menorPosicao;
 	}
 
 	public void adicionarProcesso(String nomeProcesso, int prioridade) {
