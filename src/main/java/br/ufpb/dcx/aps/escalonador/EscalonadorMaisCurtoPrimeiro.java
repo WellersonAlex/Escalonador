@@ -38,5 +38,35 @@ public class EscalonadorMaisCurtoPrimeiro extends Escalonador {
 		}
 		return status.statusProcessoRodandoFilaMCP(TipoEscalonador.MaisCurtoPrimeiro, processoRodando, fila, 0, tick);
 	}
+	public void tick() {
+
+		tick++;
+
+		if (fila.size() > 0) {
+			if (processoRodando == null) {
+
+				processoRodando = fila.remove(0);
+				duracaoRodando = duracoes.remove(0);
+				duracaoFixa = tick + duracaoRodando;
+			}
+		}
+		
+		if (duracaoFixa == tick && processoRodando != null) {
+			if (fila.size() > 0) {
+				processoRodando = fila.remove(0);
+				duracaoRodando = duracoes.remove(0);
+			} else {
+				processoRodando = null;
+				duracaoRodando = 0;
+			}
+			if (duracaoRodando > 0) {
+				duracaoFixa = tick + duracaoRodando;
+			}
+		}
+
+	}
+	public void adicionarProcesso(String nomeProcesso, int prioridade) {
+		throw new EscalonadorException();
+	}
 
 }
