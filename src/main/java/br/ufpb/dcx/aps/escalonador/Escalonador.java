@@ -356,5 +356,9 @@ public class Escalonador {
 	public TipoEscalonador escalonadorRoundRobin() {
 		return TipoEscalonador.RoundRobin;
 	}
+	
+	public TipoEscalonador escalonadorPrioridade() {
+		return TipoEscalonador.Prioridade;
+	}
 
 }
