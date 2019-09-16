@@ -10,16 +10,20 @@ public class FachadaEscalonador {
 		}
 		if (tipoEscalonador.equals(escalonador.escalonadorRoundRobin())) {
 			escalonador = new EscalonadorRoundRobin(tipoEscalonador);
-		} else {
+		} else if (tipoEscalonador.equals(escalonador.escalonadorPrioridade())) {
 			escalonador = new EscalonadorPrioridade(tipoEscalonador);
+		} else {
+			escalonador = new EscalonadorMaisCurtoPrimeiro(tipoEscalonador);
 		}
 	}
 
 	public FachadaEscalonador(TipoEscalonador tipoEscalonador, int quantum) {
 		if (tipoEscalonador.equals(escalonador.escalonadorRoundRobin())) {
 			escalonador = new EscalonadorRoundRobin(quantum);
-		} else {
+		}else if (tipoEscalonador.equals(escalonador.escalonadorPrioridade())) {
 			escalonador = new EscalonadorPrioridade(quantum);
+		} else {
+			escalonador = new EscalonadorMaisCurtoPrimeiro(0);
 		}
 	}
 

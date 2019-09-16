@@ -15,4 +15,15 @@ public class EscalonadorMaisCurtoPrimeiro extends Escalonador {
 
 	private int duracaoFixa = 0;
 	private int duracaoRodando = 0;
+	public EscalonadorMaisCurtoPrimeiro() {
+	}
+
+	public EscalonadorMaisCurtoPrimeiro(TipoEscalonador tipoEscalonador) {
+		super(TipoEscalonador.MaisCurtoPrimeiro);
+	}
+
+	public EscalonadorMaisCurtoPrimeiro(int quantum) {
+		super(TipoEscalonador.MaisCurtoPrimeiro, quantum);
+	}
+
 }
