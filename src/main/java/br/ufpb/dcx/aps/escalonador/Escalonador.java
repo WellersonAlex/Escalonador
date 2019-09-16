@@ -192,9 +192,9 @@ public class Escalonador {
 	}
 
 	protected void retomarMenorPrioridade() {
-		if ( prioridades.size() == 3 && filaAternado.size() == 2 
-			&& valorAternar+tick == 10 && prioridades.get(1) == 2) {
-			
+		if (prioridades.size() == 3 && filaAternado.size() == 2 && valorAternar + tick == 10
+				&& prioridades.get(1) == 2) {
+
 			String aux = filaAternado.poll();
 			filaAternado.add(aux);
 
@@ -294,6 +294,10 @@ public class Escalonador {
 		}
 	}
 
+	public void adicionarProcessoTempoFixo(String string, int duracao) {
+
+	}
+
 	protected void verificandoPrioridade() {
 		int menorPrioridade = Integer.MAX_VALUE;
 		int posicao = 0;
@@ -356,7 +360,7 @@ public class Escalonador {
 	public TipoEscalonador escalonadorRoundRobin() {
 		return TipoEscalonador.RoundRobin;
 	}
-	
+
 	public TipoEscalonador escalonadorPrioridade() {
 		return TipoEscalonador.Prioridade;
 	}

@@ -38,6 +38,7 @@ public class EscalonadorMaisCurtoPrimeiro extends Escalonador {
 		}
 		return status.statusProcessoRodandoFilaMCP(TipoEscalonador.MaisCurtoPrimeiro, processoRodando, fila, 0, tick);
 	}
+
 	public void tick() {
 
 		tick++;
@@ -50,7 +51,7 @@ public class EscalonadorMaisCurtoPrimeiro extends Escalonador {
 				duracaoFixa = tick + duracaoRodando;
 			}
 		}
-		
+
 		if (duracaoFixa == tick && processoRodando != null) {
 			if (fila.size() > 0) {
 				processoRodando = fila.remove(0);
@@ -65,6 +66,40 @@ public class EscalonadorMaisCurtoPrimeiro extends Escalonador {
 		}
 
 	}
+
+	public void adicionarProcessoTempoFixo(String nomeProcesso, int duracao) {
+		if (fila.contains(nomeProcesso) || nomeProcesso == null) {
+			throw new EscalonadorException();
+		}
+		if (duracao < 1) {
+			throw new EscalonadorException();
+		}
+		int maisCurto = Integer.MAX_VALUE;
+		if (fila.size() == 0) {
+			fila.add(nomeProcesso);
+			duracoes.add(duracao);
+		} else {
+			fila.add(nomeProcesso);
+			duracoes.add(duracao);
+			int menorPosicao = 0;
+			for (int i = 0; i < duracoes.size(); i++) {
+				if (duracoes.get(i) < maisCurto) {
+					maisCurto = duracoes.get(i);
+					menorPosicao = i;
+				}
+			}
+
+			if (menorPosicao > 0) {
+				String filaTemp = fila.remove(menorPosicao);
+				Integer duracaoTemp = duracoes.remove(menorPosicao);
+
+				fila.add(0, filaTemp);
+				duracoes.add(0, duracaoTemp);
+			}
+		}
+
+	}
+
 	public void adicionarProcesso(String nomeProcesso, int prioridade) {
 		throw new EscalonadorException();
 	}
